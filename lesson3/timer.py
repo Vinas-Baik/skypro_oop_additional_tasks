@@ -5,13 +5,25 @@
 - __exit__(self, exc_type, exc_val, exc_tb): магический метод, который останавливает таймер
 и выводит время выполнения блока кода.
 """
+from time import perf_counter, sleep
 
 
 class Timer:
-    pass
 
+    def __init__(self):
+        self.elapsed_time = perf_counter()
+        print(f'Init - {self.elapsed_time}')
 
-with Timer() as timer:
-    # блок кода
+    def __enter__(self):
+        self.elapsed_time = perf_counter()
+        print(f'Enter - {self.elapsed_time}')
 
-print("Execution time:", timer.elapsed_time)
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.elapsed_time = perf_counter() - self.elapsed_time
+        print(f'Exit - {self.elapsed_time}')
+
+timer = Timer()
+with timer:
+    sleep(3)
+
+print(f"Execution time: {timer.elapsed_time}")
